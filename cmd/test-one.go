@@ -7,6 +7,7 @@ import (
 	// "fmt"
 
 	dpprint "dp/utils/print"
+	dprompt "dp/utils/prompt"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -29,7 +30,10 @@ var oneCmd = &cobra.Command{
 		// --- [check] ssh
 		// pubKey := dgit.SSHKeyGet()
 		// fmt.Println("pubKey:", pubKey)
-		fmt.Println("hello")
+		// fmt.Println("hello")
+		result, _ := dprompt.YesNo("Do you want to?")
+		fmt.Println("result:", result)
+
 	},
 }
 

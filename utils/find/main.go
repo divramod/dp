@@ -12,12 +12,12 @@ import (
 
 // DDir ...
 type DDir struct {
-	Name    	string
-	Size    	int64
-	Mode    	os.FileMode
-	ModTime 	time.Time
-	PathLocal  	string
-	PathGlobal 	string
+	Name       string
+	Size       int64
+	Mode       os.FileMode
+	ModTime    time.Time
+	PathLocal  string
+	PathGlobal string
 }
 
 // FindDirs ...
@@ -80,19 +80,58 @@ func FindDirs(path string) ([]DDir, error) {
 		return selectedDirs, err
 	}
 	for _, i := range idx {
-		selectedDirs= append(selectedDirs, dirs[i])
+		selectedDirs = append(selectedDirs, dirs[i])
 	}
 	os.Chdir(currentDir)
 	return selectedDirs, nil
 }
+
 // DFile ...
 type DFile struct {
-	Name    string
-	Size    int64
-	Mode    os.FileMode
-	ModTime time.Time
-	PathLocal    string
-	PathGlobal 		string
+	Name       string
+	Size       int64
+	Mode       os.FileMode
+	ModTime    time.Time
+	PathLocal  string
+	PathGlobal string
+}
+
+// FindF ...
+func FindF(searchPath string) ([]DFile, error) {
+	var files []DFile
+
+	// --- [cd] change to search directory
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return files, err
+	}
+	err = os.Chdir(searchPath)
+	if err != nil {
+		os.Chdir(currentDir)
+		return files, err
+	}
+	err = filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			// fmt.Println("path:", path)
+			var file DFile
+			file.Name = info.Name()
+			file.Size = info.Size()
+			file.Mode = info.Mode()
+			file.ModTime = info.ModTime()
+			file.PathLocal = filepath.Base(searchPath) + "/" + path
+			file.PathGlobal = searchPath + "/" + path
+			files = append(files, file)
+		}
+		return nil
+	})
+	os.Chdir(currentDir)
+	if err != nil {
+		return files, err
+	}
+	return files, nil
 }
 
 // FindFiles ...
@@ -165,4 +204,3 @@ func FindFiles(path string) ([]DFile, error) {
 	os.Chdir(currentDir)
 	return selectedFiles, nil
 }
-

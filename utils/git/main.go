@@ -45,11 +45,9 @@ func BranchClone(cloneOptions map[string]string) error {
 		SingleBranch: true,
 		// Auth: key,
 	})
-	fmt.Println("not done") 
 	if err != nil {
 		return err
 	}
-	fmt.Println("done") 
 	return nil
 }
 
