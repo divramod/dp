@@ -37,7 +37,7 @@ func BranchClone(cloneOptions map[string]string) error {
 	}
 	fmt.Println("branch:", branch)
 	fmt.Println("URL:", cloneOptions["URL"])
-	_, err = git.PlainClone(directory, false, &git.CloneOptions{
+	res, err := git.PlainClone(directory, false, &git.CloneOptions{
 		URL:           cloneOptions["URL"],
 		RemoteName:    "origin",
 		ReferenceName: branch,
@@ -48,6 +48,7 @@ func BranchClone(cloneOptions map[string]string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("res:", res) 
 	return nil
 }
 

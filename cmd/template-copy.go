@@ -121,7 +121,9 @@ func copyGit(path Path) error {
 	}
 
 	// --- [git] clone repo
-	pathTmpTarget := home + "/.tmp/tmp_templates/" + pathChoosen
+	// var owner string
+	// var repo string
+	pathTmpTarget := home + "/.config/dp/templates/" + pathChoosen
 	err = dgit.BranchClone(map[string]string{
 		"URL":       path.Value,
 		"Branch":    branch,
@@ -190,14 +192,15 @@ func do(pathSrc string, pathChoosen string, action string) error {
 					dpfs.CreateIfNotExistsForFile(pathTarget, 0777)
 					dpfs.Copy(file.PathGlobal, pathTarget)
 				} else if action == "Merge (keep original)" {
-					// --- [copy] merge two directories
 					fileExists := dpfs.Exists(pathTarget)
 					if fileExists == false {
 						dpfs.CreateIfNotExistsForFile(pathTarget, 0777)
 						dpfs.Copy(file.PathGlobal, pathTarget)
 					}
 				} else if action == "Merge (overwrite original)" {
-					// --- [copy] merge two directories
+					dpfs.CreateIfNotExistsForFile(pathTarget, 0777)
+					dpfs.Copy(file.PathGlobal, pathTarget)
+				} else if action == "New" {
 					dpfs.CreateIfNotExistsForFile(pathTarget, 0777)
 					dpfs.Copy(file.PathGlobal, pathTarget)
 				}
@@ -214,7 +217,6 @@ func do(pathSrc string, pathChoosen string, action string) error {
 					dpfs.CreateIfNotExists(pathTarget, 0777)
 					dpfs.CopyDirectory(dir.PathGlobal, pathTarget)
 				} else if action == "Merge (keep original)" {
-					// --- [copy] merge two directories
 					files, _ := dfind.FindF(dir.PathGlobal)
 					for i := range files {
 						file := files[i]
@@ -227,7 +229,6 @@ func do(pathSrc string, pathChoosen string, action string) error {
 						}
 					}
 				} else if action == "Merge (overwrite original)" {
-					// --- [copy] merge two directories
 					files, _ := dfind.FindF(dir.PathGlobal)
 					for i := range files {
 						file := files[i]
@@ -240,12 +241,15 @@ func do(pathSrc string, pathChoosen string, action string) error {
 						dpfs.CreateIfNotExists(pathFileTarget, 0777)
 						dpfs.Copy(file.PathGlobal, fileTarget)
 					}
+				} else if action == "New" {
+					dpfs.CreateIfNotExists(pathTarget, 0777)
+					dpfs.CopyDirectory(dir.PathGlobal, pathTarget)
 				}
 			}
 		}
 	} else if whatToCopy == "All" {
+		fmt.Println("All") 
 		if action == "Reset (delete and copy)" {
-			// os.Rename(pathSrc, pathChoosen)
 			os.RemoveAll(pathChoosen)
 			dpfs.CopyDirectory(pathSrc, pathChoosen)
 		} else if action == "Merge (keep original)" {
@@ -262,7 +266,6 @@ func do(pathSrc string, pathChoosen string, action string) error {
 				}
 			}
 		} else if action == "Merge (overwrite original)" {
-			// --- [copy] merge two directories
 			files, _ := dfind.FindF(pathSrc)
 			for i := range files {
 				file := files[i]
@@ -272,9 +275,22 @@ func do(pathSrc string, pathChoosen string, action string) error {
 				if fileExists == true {
 					os.RemoveAll(fileTarget)
 				}
-				dpfs.CreateIfNotExists(pathFileTarget, 0777)
-				dpfs.Copy(file.PathGlobal, fileTarget)
+				err = dpfs.CreateIfNotExists(pathFileTarget, 0777)
+				if err != nil {
+				  return err
+				} 
+				err = dpfs.Copy(file.PathGlobal, fileTarget)
+				if err != nil {
+				  return err
+				} 
 			}
+		} else if action == "New" {
+			fmt.Println("pathSrc:", pathSrc) 
+			fmt.Println("pathChoosen:", pathChoosen) 
+			err = dpfs.CopyDirectory(pathSrc, pathChoosen)
+			if err != nil {
+			  return err
+			} 
 		}
 	}
 	return nil

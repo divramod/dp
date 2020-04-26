@@ -6,9 +6,14 @@ import (
 	// dgit "dp/utils/git"
 	// "fmt"
 
+	dlog "dp/utils/log"
 	dpprint "dp/utils/print"
-	dprompt "dp/utils/prompt"
 	"fmt"
+	"os"
+
+	// dprompt "dp/utils/prompt"
+	dos "dp/utils"
+	// "fmt"
 
 	"github.com/spf13/cobra"
 )
@@ -31,8 +36,16 @@ var oneCmd = &cobra.Command{
 		// pubKey := dgit.SSHKeyGet()
 		// fmt.Println("pubKey:", pubKey)
 		// fmt.Println("hello")
-		result, _ := dprompt.YesNo("Do you want to?")
-		fmt.Println("result:", result)
+		// result, _ := dprompt.YesNo("Do you want to?")
+		// fmt.Println("result:", result)
+
+		os.Setenv("FOO", "1")
+		err, stdOut, stdErr := dos.Exec("hcloud server list; echo $FOO")
+		if err != nil {
+			dlog.Err(err.Error())
+		}
+		fmt.Print("stdErr:", stdErr)
+		fmt.Print("stdOut:", stdOut)
 
 	},
 }
