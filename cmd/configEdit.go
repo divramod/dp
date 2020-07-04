@@ -25,7 +25,8 @@ var configEditCmd = &cobra.Command{
 		editCmd.Stdout = os.Stdout
 		editCmd.Stdin = os.Stdin
 		editCmd.Stderr = os.Stderr
-		editCmd.Run()
+		err = editCmd.Run()
+		fmt.Println("err:", err) 
 	},
 }
 

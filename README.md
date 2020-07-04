@@ -1,5 +1,5 @@
 # dp
 A tool to manage projects.
 
-# devlop
-
+# TODO
+- [ ] eject project
