@@ -1,4 +1,0 @@
-#!/usr/bin/env sh 
-: "${PATH_BASE:="$(git rev-parse --show-toplevel)"}" 
-cd "${PATH_BASE}"
-sudo find . ~/.config/dp -name "*.*" -type f | entr go install dp

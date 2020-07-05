@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+# - install dp
+: "${PATH_BASE:="$(git rev-parse --show-toplevel)"}"
+cd "${PATH_BASE}"
+go install dp

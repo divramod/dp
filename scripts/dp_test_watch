@@ -1,4 +1,5 @@
-#!/usr/bin/env sh 
+#!/usr/bin/env sh
+# - test watch
 : "${PATH_BASE:="$(git rev-parse --show-toplevel)"}"
 cd "${PATH_BASE}"
 sudo find . ~/.config/dp -name "*.*" -type f | entr go run main.go "${@}"
